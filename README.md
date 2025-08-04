@@ -1,4 +1,4 @@
-# 现代化桌面应用开发框架
+# Electron 现代化技术架构 脚手架
 
 <div align="center">
 
