@@ -78,11 +78,11 @@ function App(): React.JSX.Element {
   ]
 
   const features = [
-    { name: '模块化架构', icon: <Layers className="w-5 h-5" />, status: '已集成' },
-    { name: '类型安全', icon: <Settings className="w-5 h-5" />, status: '已集成' },
-    { name: '热重载开发', icon: <Zap className="w-5 h-5" />, status: '已集成' },
-    { name: '现代化UI', icon: <Palette className="w-5 h-5" />, status: '已集成' },
-    { name: 'IPC通信', icon: <GitBranch className="w-5 h-5" />, status: '已集成' }
+    { name: '模块化架构', icon: <Layers className="w-5 h-5 text-blue-400" />, status: '已集成' },
+    { name: '类型安全', icon: <Settings className="w-5 h-5 text-green-400" />, status: '已集成' },
+    { name: '热重载开发', icon: <Zap className="w-5 h-5 text-yellow-400" />, status: '已集成' },
+    { name: '现代化UI', icon: <Palette className="w-5 h-5 text-purple-400" />, status: '已集成' },
+    { name: 'IPC通信', icon: <GitBranch className="w-5 h-5 text-teal-400" />, status: '已集成' }
   ]
 
   const containerVariants = {
@@ -117,7 +117,7 @@ function App(): React.JSX.Element {
       </div>
 
       <motion.div 
-        className="relative z-10 container mx-auto px-6 py-8"
+        className="relative z-10 container mx-auto px-6 py-8 pt-16"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -219,8 +219,8 @@ function App(): React.JSX.Element {
               <div className="font-mono text-sm text-slate-300 space-y-1">
                 <div className="flex items-center gap-2">
                   <Cpu className="w-4 h-4 text-yellow-400" />
-                  <span>src/main/</span>
-                  <Badge variant="outline" className="text-xs">主进程</Badge>
+                  <span className="text-white">src/main/</span>
+                  <Badge variant="outline" className="text-xs text-white border-white">主进程</Badge>
                 </div>
                 <div className="ml-6 text-slate-400">
                   ├── modules/ <span className="text-green-400"># 功能模块</span><br/>
@@ -230,8 +230,8 @@ function App(): React.JSX.Element {
                 
                 <div className="flex items-center gap-2 mt-4">
                   <Monitor className="w-4 h-4 text-blue-400" />
-                  <span>src/renderer/</span>
-                  <Badge variant="outline" className="text-xs">渲染进程</Badge>
+                  <span className="text-white">src/renderer/</span>
+                  <Badge variant="outline" className="text-xs text-white border-white">渲染进程</Badge>
                 </div>
                 <div className="ml-6 text-slate-400">
                   ├── pages/ <span className="text-green-400"># 页面组件</span><br/>
@@ -359,7 +359,7 @@ function App(): React.JSX.Element {
           
           <Button 
             variant="outline" 
-            className="border-slate-600 text-slate-300 hover:bg-slate-800 px-8 py-3 text-lg"
+            className="border-slate-600 text-black hover:bg-slate-700 hover:text-white hover:border-slate-500 px-8 py-3 text-lg transition-all duration-300"
             size="lg"
           >
             <Settings className="w-5 h-5 mr-2" />

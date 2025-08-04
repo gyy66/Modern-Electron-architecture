@@ -44,7 +44,7 @@ export default function TitleBar({ title = '现代化桌面应用开发框架' }
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative z-50 flex items-center justify-between h-10 bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 select-none"
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between h-10 bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 select-none"
     >
       {/* 左侧 - Logo 和标题 (可拖拽区域) */}
       <div 
