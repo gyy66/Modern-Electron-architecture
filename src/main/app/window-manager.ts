@@ -34,6 +34,18 @@ export class WindowManager {
       }
     })
 
+    // 同步最大化状态变更到渲染进程（包括拖拽导致的还原/最大化）
+    this.mainWindow.on('maximize', () => {
+      try {
+        this.mainWindow?.webContents.send('window-maximize-changed', true)
+      } catch {}
+    })
+    this.mainWindow.on('unmaximize', () => {
+      try {
+        this.mainWindow?.webContents.send('window-maximize-changed', false)
+      } catch {}
+    })
+
     // 添加错误处理
     this.mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
       console.error('页面加载失败:', errorCode, errorDescription)
