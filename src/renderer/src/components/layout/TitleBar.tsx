@@ -19,6 +19,18 @@ export default function TitleBar({ title = '现代化桌面应用开发框架' }
     }
     
     checkMaximized()
+
+    // 订阅主进程的最大化状态变更（包括拖拽触发的还原/最大化）
+    let unsubscribe: (() => void) | undefined
+    if (window.api?.window?.onMaximizeChanged) {
+      unsubscribe = window.api.window.onMaximizeChanged((state: boolean) => {
+        setIsMaximized(state)
+      })
+    }
+
+    return () => {
+      if (unsubscribe) unsubscribe()
+    }
   }, [])
 
   const handleMinimize = async () => {
@@ -83,7 +95,8 @@ export default function TitleBar({ title = '现代化桌面应用开发框架' }
           title={isMaximized ? '还原窗口' : '最大化窗口'}
         >
           {isMaximized ? (
-            <Copy className="w-4 h-4" />
+            // 复制图标表示“已最大化”状态，这里做水平翻转以符合视觉期望
+            <Copy className="w-4 h-4" style={{ transform: 'scaleX(-1)' }} />
           ) : (
             <Square className="w-4 h-4" />
           )}
