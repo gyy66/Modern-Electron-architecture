@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Minus, Square, X, Monitor, Copy } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -11,10 +11,13 @@ export default function TitleBar({ title = '现代化桌面应用开发框架' }
   const [isMaximized, setIsMaximized] = useState(false)
 
   useEffect(() => {
+    // 防抖计时器，避免状态频繁切换导致的多次渲染
+    const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
     const checkMaximized = async () => {
       if (window.api?.window?.isMaximized) {
         const maximized = await window.api.window.isMaximized()
-        setIsMaximized(maximized)
+        setIsMaximized((prev) => (prev !== maximized ? maximized : prev))
       }
     }
     
@@ -24,11 +27,15 @@ export default function TitleBar({ title = '现代化桌面应用开发框架' }
     let unsubscribe: (() => void) | undefined
     if (window.api?.window?.onMaximizeChanged) {
       unsubscribe = window.api.window.onMaximizeChanged((state: boolean) => {
-        setIsMaximized(state)
+        if (debounceRef.current) clearTimeout(debounceRef.current)
+        debounceRef.current = setTimeout(() => {
+          setIsMaximized((prev) => (prev !== state ? state : prev))
+        }, 120)
       })
     }
 
     return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current)
       if (unsubscribe) unsubscribe()
     }
   }, [])
