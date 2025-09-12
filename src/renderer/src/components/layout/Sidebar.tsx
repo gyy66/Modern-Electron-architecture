@@ -1,0 +1,205 @@
+import React, { createContext, useContext, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Menu, X } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { NavLink } from 'react-router-dom'
+
+interface SidebarContextProps {
+  open: boolean
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  animate: boolean
+}
+
+const SidebarContext = createContext<SidebarContextProps | undefined>(undefined)
+
+export const useSidebar = (): SidebarContextProps => {
+  const ctx = useContext(SidebarContext)
+  if (!ctx) {
+    throw new Error('useSidebar must be used within a SidebarProvider')
+  }
+  return ctx
+}
+
+export function SidebarProvider({
+  children,
+  open: openProp,
+  setOpen: setOpenProp,
+  animate = true
+}: {
+  children: React.ReactNode
+  open?: boolean
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>
+  animate?: boolean
+}) {
+  const [openState, setOpenState] = useState(false)
+
+  const open = openProp !== undefined ? openProp : openState
+  const setOpen = setOpenProp !== undefined ? setOpenProp : setOpenState
+
+  return (
+    <SidebarContext.Provider value={{ open, setOpen, animate }}>
+      {children}
+    </SidebarContext.Provider>
+  )
+}
+
+export function Sidebar({
+  children,
+  open,
+  setOpen,
+  animate
+}: {
+  children: React.ReactNode
+  open?: boolean
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>
+  animate?: boolean
+}) {
+  return (
+    <SidebarProvider open={open} setOpen={setOpen} animate={animate}>
+      {children}
+    </SidebarProvider>
+  )
+}
+
+export function SidebarBody({ className, children }: { className?: string; children?: React.ReactNode }) {
+  return (
+    <>
+      <DesktopSidebar className={className}>{children as React.ReactNode}</DesktopSidebar>
+      <MobileSidebar className={className}>{children as React.ReactNode}</MobileSidebar>
+    </>
+  )
+}
+
+interface DesktopSidebarProps {
+  className?: string
+  children?: React.ReactNode
+}
+
+export function DesktopSidebar({
+  className,
+  children
+}: DesktopSidebarProps) {
+  const { open, setOpen, animate } = useSidebar()
+  return (
+    <motion.div
+      className={cn(
+        'h-full px-4 pt-0 pb-4 hidden md:flex md:flex-col bg-transparent text-foreground/80 w-[240px] flex-shrink-0 overflow-visible',
+        className
+      )}
+      animate={{ width: animate ? (open ? '240px' : '72px') : '240px' }}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      {/* 侧边栏 Logo 已移至标题栏左侧，此处去除占位 */}
+      {children}
+    </motion.div>
+  )
+}
+
+export function MobileSidebar({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<'div'>) {
+  const { open, setOpen } = useSidebar()
+  return (
+    <>
+      <div
+        className={cn(
+          'h-10 px-4 py-4 flex flex-row md:hidden items-center justify-between bg-sidebar text-sidebar-foreground w-full'
+        )}
+        {...props}
+      >
+        <div className="flex justify-end z-20 w-full">
+          <Menu
+            className="cursor-pointer"
+            onClick={() => setOpen(!open)}
+          />
+        </div>
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ x: '-100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '-100%', opacity: 0 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className={cn(
+                'fixed h-full w-full inset-0 bg-sidebar text-sidebar-foreground p-10 z-[100] flex flex-col justify-between',
+                className
+              )}
+            >
+              <div
+                className="absolute right-10 top-10 z-50 cursor-pointer"
+                onClick={() => setOpen(!open)}
+              >
+                <X />
+              </div>
+              {children}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </>
+  )
+}
+
+export interface SidebarLinkItem {
+  label: string
+  href?: string
+  onClick?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
+  icon: React.JSX.Element | React.ReactNode
+}
+
+export function SidebarLink({
+  link,
+  className,
+  ...props
+}: {
+  link: SidebarLinkItem
+  className?: string
+  props?: React.AnchorHTMLAttributes<HTMLAnchorElement>
+}) {
+  const { open } = useSidebar()
+  return (
+    <NavLink
+      to={link.href?.replace(/^#/, '') || '/'}
+      className={() => cn('block w-full', className)}
+      {...(props as any)}
+    >
+      {({ isActive }) => (
+        <motion.div
+          initial={false}
+          animate={{
+            backgroundColor: isActive ? 'rgba(99,102,241,0.20)' : 'rgba(99,102,241,0)',
+          }}
+          whileHover={isActive ? {} : { backgroundColor: 'rgba(99,102,241,0.12)', scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+          className={cn(
+            'relative grid items-center py-2 rounded-md w-full px-2 gap-2 overflow-visible',
+            'text-foreground/80 hover:text-foreground'
+          )}
+          style={{ gridTemplateColumns: open ? '24px 1fr' as any : '24px 0px' as any }}
+        >
+          <div className="w-6 h-6 flex items-center justify-center">
+            <span className="text-inherit opacity-80 group-hover/sidebar:opacity-100 transition-opacity duration-200">
+              {link.icon}
+            </span>
+          </div>
+          <div className={cn('overflow-hidden', open ? 'w-auto flex-1' : 'w-0') }>
+            <span
+              className={cn(
+                'text-sm whitespace-nowrap inline-block !p-0 !m-0 transition-opacity duration-200',
+                open ? 'opacity-100' : 'opacity-0'
+              )}
+            >
+              {link.label}
+            </span>
+          </div>
+        </motion.div>
+      )}
+    </NavLink>
+  )
+}
+
+
