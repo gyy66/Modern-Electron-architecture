@@ -9,10 +9,10 @@ interface TitleBarProps {
 
 export default function TitleBar({ title = '现代化桌面应用开发框架' }: TitleBarProps) {
   const [isMaximized, setIsMaximized] = useState(false)
+  // 防抖计时器，避免状态频繁切换导致的多次渲染
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    // 防抖计时器，避免状态频繁切换导致的多次渲染
-    const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     const checkMaximized = async () => {
       if (window.api?.window?.isMaximized) {
