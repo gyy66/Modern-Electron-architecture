@@ -9,7 +9,7 @@ interface TitleBarProps {
   showLogo?: boolean
 }
 
-export default function TitleBar({ title = '现代化桌面应用开发框架', embedded = true }: TitleBarProps) {
+export default function TitleBar({ embedded = true }: TitleBarProps) {
   const [isMaximized, setIsMaximized] = useState(false)
   // 防抖计时器，避免状态频繁切换导致的多次渲染
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)

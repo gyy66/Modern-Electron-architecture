@@ -1,7 +1,7 @@
 import React from 'react'
 import TitleBar from './TitleBar'
 import { Sidebar, SidebarBody, SidebarLink, SidebarLinkItem } from './Sidebar'
-import { LayoutDashboard, UserCog, Settings as SettingsIcon, LogIn } from 'lucide-react'
+import { LayoutDashboard, UserCog, Settings as SettingsIcon } from 'lucide-react'
 
 export interface LayoutProps {
   children?: React.ReactNode

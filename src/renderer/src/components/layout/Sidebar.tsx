@@ -172,30 +172,36 @@ export function SidebarLink({
           animate={{
             backgroundColor: isActive ? 'rgba(99,102,241,0.20)' : 'rgba(99,102,241,0)',
           }}
-          whileHover={isActive ? {} : { backgroundColor: 'rgba(99,102,241,0.12)', scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={isActive ? {} : { backgroundColor: 'rgba(99,102,241,0.12)' }}
           transition={{ type: 'spring', stiffness: 260, damping: 24 }}
           className={cn(
-            'relative grid items-center py-2 rounded-md w-full px-2 gap-2 overflow-visible',
+            'relative rounded-md w-full overflow-visible px-2 py-2',
             'text-foreground/80 hover:text-foreground'
           )}
-          style={{ gridTemplateColumns: open ? '24px 1fr' as any : '24px 0px' as any }}
         >
-          <div className="w-6 h-6 flex items-center justify-center">
-            <span className="text-inherit opacity-80 group-hover/sidebar:opacity-100 transition-opacity duration-200">
-              {link.icon}
-            </span>
-          </div>
-          <div className={cn('overflow-hidden', open ? 'w-auto flex-1' : 'w-0') }>
-            <span
-              className={cn(
-                'text-sm whitespace-nowrap inline-block !p-0 !m-0 transition-opacity duration-200',
-                open ? 'opacity-100' : 'opacity-0'
-              )}
-            >
-              {link.label}
-            </span>
-          </div>
+          <motion.div
+            className="grid items-center gap-2"
+            style={{ gridTemplateColumns: open ? '24px 1fr' as any : '24px 0px' as any }}
+            whileHover={isActive ? {} : { scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+          >
+            <div className="w-6 h-6 flex items-center justify-center">
+              <span className="text-inherit opacity-80 group-hover/sidebar:opacity-100 transition-opacity duration-200">
+                {link.icon}
+              </span>
+            </div>
+            <div className={cn('overflow-hidden', open ? 'w-auto flex-1' : 'w-0') }>
+              <span
+                className={cn(
+                  'text-sm whitespace-nowrap inline-block !p-0 !m-0 transition-opacity duration-200',
+                  open ? 'opacity-100' : 'opacity-0'
+                )}
+              >
+                {link.label}
+              </span>
+            </div>
+          </motion.div>
         </motion.div>
       )}
     </NavLink>
