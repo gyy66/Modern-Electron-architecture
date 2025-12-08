@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+pnpm-debug.log*
+
+# Build outputs
+dist/
+out/
+release/
+
+# Development
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Cache
+.eslintcache
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+
+# Temporary
+tmp/
+temp/
+
+# Coverage
+coverage/
+
+# Electron packages
+*.dmg
+*.exe
+*.AppImage
+*.deb
+*.rpm
